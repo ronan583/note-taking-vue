@@ -56,6 +56,7 @@ const showLocalStorage = () => {
 const setLocalContent = (content) => {
   console.log(content)
   localStorage.setItem(CONTENT_KEY, content)
+  console.log("fire!");
 }
 const getLocalStorage = () => {
   return localStorage.getItem(CONTENT_KEY)
