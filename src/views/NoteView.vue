@@ -9,6 +9,7 @@
         <QuillEditor
           theme="snow"
           @update:content="saveQuillContent"
+          @textChange="onTextChange"
           v-model:content="quillContent"
           contentType="html"
           ref="quill"
@@ -26,27 +27,40 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import { ref } from 'vue'
 
-const CONTENT_KEY = "ql-c-key"
-const TIME_INTERVAL = 800;
+const CONTENT_KEY = 'ql-c-key'
+const TIME_INTERVAL = 800
 
 const quillContent = ref('')
 const quill = ref()
+let timeId = 0
 const clearQuillContent = () => {
   quill.value.setHTML('')
 }
-const saveQuillContent = () => {
-  
+const saveQuillContent = () => {}
+const onTextChange = () => {
+  debounce(setLocalContent, TIME_INTERVAL, quillContent.value)
 }
-const startTiming = (func) => {
-  const timestamp = setTimeout(func, TIME_INTERVAL);
-  return timestamp;
+
+const debounce = (bounceFunc, timeInterval, value) => {
+  clearTimeout(timeId)
+  timeId = setTimeout(bounceFunc, timeInterval, value)
+}
+const loadStorage = () => {
+  const content = getLocalStorage()
+  if (!content) return
+  quillContent.value = content
 }
 const showLocalStorage = () => {
-  console.log(localStorage);
+  console.log(localStorage)
 }
 const setLocalContent = (content) => {
+  console.log(content)
   localStorage.setItem(CONTENT_KEY, content)
 }
+const getLocalStorage = () => {
+  return localStorage.getItem(CONTENT_KEY)
+}
+loadStorage()
 </script>
 <style scoped>
 .container {
